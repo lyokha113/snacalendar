@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="calendar">
+    <serverData>
+      <paths name="calendar">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tomcat/webapps" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

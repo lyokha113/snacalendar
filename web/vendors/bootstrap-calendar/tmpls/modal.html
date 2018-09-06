@@ -1,0 +1,110 @@
+<div class="hiddeninfo" id="modal-id"><%= event.id %></div>
+<div class="hiddeninfo" id="modal-creator"><%= event.creator.account.accountID %></div>
+<div class="eventinfomation">
+    <h4><span>Event informations</span></h4>
+    <ul>
+        <li>
+            <span class="title_info">Title: </span>
+            <span class="detail_info" id="modal-title"><%= event.title %></span>
+        </li>
+
+        <li>
+            <div class="hiddeninfo" id="modal-startdate"><%= event.start %></div>
+            <div class="hiddeninfo" id="modal-enddate"><%= event.end %></div>
+            <span class="title_info">Date: </span>
+            <span class="detail_info"><%= formatDateTimeRange(event.start, event.end) %></span>
+        </li>
+
+        <% if (event.type.eventTypeID == EVENT_TYPE.CUSTOMER_CARE) { %>
+            <% if (event.customer.customerID == 0) { %>
+            <li>
+                <span class="title_info">Venue: </span>
+                <span class="detail_info modal-customer-other"><%= event.customerOther %></span>
+            </li>
+            <% } else { %>
+            <li>
+                <div class="hiddeninfo" id="modal-customer"><%= event.customer.customerID %></div>
+                <span class="title_info">Venue: </span>
+                <span class="detail_info "><%= event.customer.customerName %>&emsp;<%= event.customer.customerAddress %></span>
+            </li>
+            <% } %>
+
+            <% if (event.hasOwnProperty('car')) { %>
+            <li>
+                <div class="hiddeninfo modal-car"><%= event.car.carID %></div>
+                <span class="title_info">Car: </span>
+                <span class="detail_info"><%= event.car.carBrand %>&emsp;<%= event.car.carSlot %> slot&emsp;<%= event.car.carPlate %></span>
+            </li>
+            <% } %>
+
+            <li>
+                <span class="title_info">Department: </span>
+                <span class="detail_info"><%= event.creator.department.departmentName %></span>
+            </li>
+
+            <li>
+                <span class="title_info">Attendee: </span>
+                <span class="viewattendees">View attendees</span>
+            </li>
+
+        <% } %>
+
+        <% if (event.type.eventTypeID == EVENT_TYPE.TRAINING) { %>
+            <li>
+                <span class="title_info">Attendee: </span>
+                <span class="viewattendees">View attendees</span>
+            </li>
+        <% } %>
+
+        <% if (event.type.eventTypeID == EVENT_TYPE.CAR_RESERVATION) { %>
+            <% if (event.customer.customerID == 0) { %>
+                <li>
+                    <span class="title_info">Venue: </span>
+                    <span class="detail_info modal-customer-other"><%= event.customerOther %></span>
+                </li>
+            <% } %>
+
+            <% if (event.hasOwnProperty('car')) { %>
+                <li>
+                    <div class="hiddeninfo modal-car"><%= event.car.carID %></div>
+                    <span class="title_info">Car: </span>
+                    <span class="detail_info"><%= event.car.carBrand %>&emsp;<%= event.car.carSlot %> slot&emsp;<%= event.car.carPlate %></span>
+                </li>
+            <% } %>
+        <% } %>
+
+        <% if (event.type.eventTypeID == EVENT_TYPE.ANNUAL_LEAVE && event.hasOwnProperty('content')) { %>
+            <li>
+                <span class="title_info">Reason: </span>
+                <span class="detail_info" id="annual_leave_reason"><%= event.content %></span>
+            </li>
+        <% } %>
+    </ul>
+</div>
+
+<% if (event.type.eventTypeID != EVENT_TYPE.ANNUAL_LEAVE && event.hasOwnProperty('content')) { %>
+    <hr>
+    <div class="eventcontent">
+        <h4><span>Event content</span></h4>
+        <div>
+            <%= event.content %>
+        </div>
+    </div>
+<% } %>
+
+<script>
+    /* View event attendee link */
+    $(".viewattendees").on('click', function () {
+        let attendees = getAttendees($("#modal-id").text());
+        attendees.then(result => {
+            result = !result.hasOwnProperty('error')
+                ? result.map(emp => (emp.sex ? "Mr " : "Ms ") + emp.fullname).join(', ')
+                : result.status;
+            $(this).text(result);
+            $(this).css('pointer-events', 'none');
+        }).catch(error => {
+            console.log(error);
+            $(this).text("Error action");
+        });
+    });
+</script>

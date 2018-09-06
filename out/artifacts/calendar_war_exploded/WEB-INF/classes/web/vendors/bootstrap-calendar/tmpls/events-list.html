@@ -1,0 +1,22 @@
+<span id="cal-slide-tick" style="display: none"></span>
+<div id="cal-slide-content" class="cal-event-list">
+	<ul class="unstyled list-unstyled">
+		<% _.each(events, function(event) { %>
+			<li>
+				<span class="pull-left event <%= event['class'] %>"></span>&nbsp;
+				<a href="<%= event.url ? event.url : 'javascript:void(0)' %>" data-event-id="<%= event.id %>"
+					data-event-class="<%= event['class'] %>" 
+					class="event-item">
+					<div style="display: inline-flex; width: 10%; color: lightblue;"><%= event.creator.fullname %></div>
+					<div style="display: inline-flex; width: 40%; color: whitesmoke"><%= event.title %></div>
+					<div style="display: inline-flex; width: 30%; color: lightblue;"><%= formatDateTimeRange(event.start, event.end) %></div>
+					<div style="display: inline-flex; width: 15%; color: silver">
+						<% if (event.hasOwnProperty('car')) { %>
+							Car: <%= event.car.carPlate %>
+						<% } %>
+					</div>
+				</a>
+			</li>
+		<% }) %>
+	</ul>
+</div>
